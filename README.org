@@ -1,0 +1,5 @@
+* minker
+Subdivide a complex paragraph into digestible and memorable pieces.
+
+* The name 
+"minker" is an amalgam of mind, thinking and mincer.
