@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QTableWidget, QHeaderView, QShortcut, \
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtCore import QItemSelectionModel
 from delegate import StyledItemDelegate
-from commands import CopyCellCommand, SplitCellCommand
+from commands import CopyCellCommand, SplitCellCommand, SwapRowsCommand
 
 
 class TableWidget(QTableWidget):
@@ -30,6 +30,12 @@ class TableWidget(QTableWidget):
 
         shortcut = QShortcut(QKeySequence("Ctrl+Right"), self)
         shortcut.activated.connect(self.copyCellCmd)
+
+        shortcut = QShortcut(QKeySequence("Alt+Down"), self)
+        shortcut.activated.connect(self.swapRowDown)
+        shortcut = QShortcut(QKeySequence("Alt+Up"), self)
+        shortcut.activated.connect(self.swapRowUp)
+
 
     def isNeighborCellEmpty(self):
         select = self.selectionModel()
@@ -75,3 +81,19 @@ class TableWidget(QTableWidget):
             for c in range(2):
                 newItem = QTableWidgetItem(L[r][c])
                 self.setItem(r, c, newItem)
+
+    def swapRowDown(self):
+        self.swapRows(+1)
+
+    def swapRowUp(self):
+        self.swapRows(-1)
+
+    def swapRows(self, direction):
+        swapRowsCommand = SwapRowsCommand(self, direction)
+        if swapRowsCommand.hasSwappedCells:
+            self.undoStack.push(swapRowsCommand)
+
+            self.clearSelection()
+            r = swapRowsCommand.newRow
+            c = swapRowsCommand.newColumn
+            self.setCurrentCell(r, c, QItemSelectionModel.Select)

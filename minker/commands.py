@@ -56,3 +56,20 @@ class SplitCellCommand(UndoCommand):
         newRow = r+1
         return newRow
 
+
+class SwapRowsCommand(UndoCommand):
+    def __init__(self, tableWidget, direction):
+        super().__init__(tableWidget)
+
+        tw = self.tableWidget
+        select = tw.selectionModel()
+        r = select.currentIndex().row()
+        self.newRow = r + direction
+        self.newColumn = select.currentIndex().column()
+        self.hasSwappedCells = False
+        if self.newRow >= 0 and self.newRow < tw.rowCount():
+            L = self.snapshot()
+            self.oldTableContent = L.copy()
+            L[r], L[self.newRow] = L[self.newRow], L[r]
+            self.newTableContent = L
+            self.hasSwappedCells = True
