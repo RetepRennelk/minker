@@ -19,8 +19,8 @@ class TextEdit(QTextEdit):
         self.moveCursor(QTextCursor.End, QTextCursor.KeepAnchor)
         self.cut()
         clipboard = QApplication.clipboard()
-        parent = self.parent().parent()
-        newRow = parent.splitCellCmd(clipboard.text())
+        tableWidget = self.parent().parent()
+        newRow = tableWidget.splitCellCmd(clipboard.text())
 
-        parent.clearSelection()
-        parent.setCurrentCell(newRow, 0, QItemSelectionModel.Select)
+        tableWidget.clearSelection()
+        tableWidget.setCurrentCell(newRow, 0, QItemSelectionModel.Select)
