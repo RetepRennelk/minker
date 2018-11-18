@@ -1,10 +1,11 @@
 from PyQt5.QtWidgets import QTableWidget, QHeaderView, QShortcut,\
-    QTableWidgetItem, QUndoStack
+    QTableWidgetItem, QUndoStack, QFileDialog
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtCore import QItemSelectionModel
 from minker.delegate import StyledItemDelegate
 from minker.commands import CopyCellCommand, SplitCellCommand, \
     SwapRowsCommand, DeleteRowCommand
+import json
 
 
 class TableWidget(QTableWidget):
@@ -44,6 +45,9 @@ class TableWidget(QTableWidget):
 
         shortcut = QShortcut(QKeySequence("Ctrl+S"), self)
         shortcut.activated.connect(self.save)
+
+        shortcut = QShortcut(QKeySequence("Ctrl+O"), self)
+        shortcut.activated.connect(self.open)
 
     def isNeighborCellEmpty(self):
         select = self.selectionModel()
@@ -131,4 +135,21 @@ class TableWidget(QTableWidget):
         return L
 
     def save(self):
-        print('save')
+        fd = QFileDialog()
+        fd.setNameFilter("Minker files (*.mkon)")
+        if (fd.exec()):
+            filename = fd.selectedFiles()[0]
+            if not filename.endswith(".mkon"):
+                filename += ".mkon"
+            with open(filename, 'w') as f:
+                json.dump(self.snapshot(), f)
+
+    def open(self):
+        fd = QFileDialog()
+        fd.setNameFilter("Minker files (*.mkon)")
+        if (fd.exec()):
+            filename = fd.selectedFiles()[0]
+            if not filename.endswith(".mkon"):
+                filename += ".mkon"
+            with open(filename, 'r') as f:
+                self.populate(json.load(f))
