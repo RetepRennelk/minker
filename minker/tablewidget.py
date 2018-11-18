@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QTableWidget, QHeaderView, QShortcut, \
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtCore import QItemSelectionModel
 from delegate import StyledItemDelegate
-from commands import CopyCellCommand
+from commands import CopyCellCommand, SplitCellCommand
 
 
 class TableWidget(QTableWidget):

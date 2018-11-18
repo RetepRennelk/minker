@@ -33,3 +33,26 @@ class CopyCellCommand(UndoCommand):
             tableWidget.copyCell()
             self.newTableContent = self.snapshot()
             self.hasCopiedCell = True
+
+
+class SplitCellCommand(UndoCommand):
+    def __init__(self, tableWidget, txt):
+        super().__init__(tableWidget)
+        self.oldTableContent = self.snapshot()
+        self.newRow = self.insertRowBelow(txt)
+        self.newTableContent = self.snapshot()
+
+    def insertRowBelow(self, txt):
+        tw = self.tableWidget
+        select = tw.selectionModel()
+        r = select.currentIndex().row()
+        tw.insertRow(r+1)
+        newItem = QTableWidgetItem(txt)
+        tw.setItem(r+1, 0, newItem)
+
+        d = tw.itemDelegate()
+        d.commit_and_close_editor()
+
+        newRow = r+1
+        return newRow
+
