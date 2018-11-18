@@ -2,8 +2,8 @@ from PyQt5.QtWidgets import QTableWidget, QHeaderView, QShortcut,\
     QTableWidgetItem, QUndoStack
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtCore import QItemSelectionModel
-from delegate import StyledItemDelegate
-from commands import CopyCellCommand, SplitCellCommand, \
+from minker.delegate import StyledItemDelegate
+from minker.commands import CopyCellCommand, SplitCellCommand, \
     SwapRowsCommand, DeleteRowCommand
 
 

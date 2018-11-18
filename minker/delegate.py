@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QStyledItemDelegate
 from PyQt5.QtCore import Qt, QEvent
-from textedit import TextEdit
+from minker.textedit import TextEdit
 
 
 class StyledItemDelegate(QStyledItemDelegate):

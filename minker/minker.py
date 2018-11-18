@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QIcon, QFont
-from tablewidget import TableWidget
+from minker.tablewidget import TableWidget
 
 
 class MainWindow(QMainWindow):
@@ -13,8 +13,7 @@ class MainWindow(QMainWindow):
         tw = TableWidget(self)
         self.setCentralWidget(tw)
 
-
-if __name__ == '__main__':
+def main():
     sCSS = '''
     QTableWidget {
         gridline-color: black;
@@ -32,3 +31,6 @@ if __name__ == '__main__':
     m.show()
     app.exec_()
 
+
+if __name__ == '__main__':
+    main()
