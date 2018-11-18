@@ -42,6 +42,9 @@ class TableWidget(QTableWidget):
         shortcut = QShortcut(QKeySequence("Ctrl+D"), self)
         shortcut.activated.connect(self.deleteRow)
 
+        shortcut = QShortcut(QKeySequence("Ctrl+S"), self)
+        shortcut.activated.connect(self.save)
+
     def isNeighborCellEmpty(self):
         select = self.selectionModel()
         if select.currentIndex().column() != 0:
@@ -116,3 +119,16 @@ class TableWidget(QTableWidget):
             row = select.currentIndex().row()
             deleteRowCommand = DeleteRowCommand(self, row)
             self.undoStack.push(deleteRowCommand)
+            
+    def snapshot(self):
+        L = []
+        for r in range(self.rowCount()):
+            l = []
+            for c in range(self.columnCount()):
+                i = self.item(r, c)
+                l.append("" if i is None else i.text())
+            L.append(l)
+        return L
+
+    def save(self):
+        print('save')

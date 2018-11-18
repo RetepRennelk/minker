@@ -6,17 +6,6 @@ class UndoCommand(QUndoCommand):
         super().__init__()
         self.tableWidget = tableWidget
 
-    def snapshot(self):
-        t = self.tableWidget
-        L = []
-        for r in range(t.rowCount()):
-            l = []
-            for c in range(t.columnCount()):
-                i = t.item(r, c)
-                l.append("" if i is None else i.text())
-            L.append(l)
-        return L
-
     def undo(self):
         self.tableWidget.populate(self.oldTableContent)
 
@@ -29,18 +18,18 @@ class CopyCellCommand(UndoCommand):
         super().__init__(tableWidget)
         self.hasCopiedCell = False
         if tableWidget.isNeighborCellEmpty():
-            self.oldTableContent = self.snapshot()
+            self.oldTableContent = tableWidget.snapshot()
             tableWidget.copyCell()
-            self.newTableContent = self.snapshot()
+            self.newTableContent = tableWidget.snapshot()
             self.hasCopiedCell = True
 
 
 class SplitCellCommand(UndoCommand):
     def __init__(self, tableWidget, txt):
         super().__init__(tableWidget)
-        self.oldTableContent = self.snapshot()
+        self.oldTableContent = tableWidget.snapshot()
         self.newRow = self.insertRowBelow(txt)
-        self.newTableContent = self.snapshot()
+        self.newTableContent = tableWidget.snapshot()
 
     def insertRowBelow(self, txt):
         tw = self.tableWidget
@@ -61,14 +50,13 @@ class SwapRowsCommand(UndoCommand):
     def __init__(self, tableWidget, direction):
         super().__init__(tableWidget)
 
-        tw = self.tableWidget
-        select = tw.selectionModel()
+        select = tableWidget.selectionModel()
         r = select.currentIndex().row()
         self.newRow = r + direction
         self.newColumn = select.currentIndex().column()
         self.hasSwappedCells = False
-        if self.newRow >= 0 and self.newRow < tw.rowCount():
-            L = self.snapshot()
+        if self.newRow >= 0 and self.newRow < tableWidget.rowCount():
+            L = tableWidget.snapshot()
             self.oldTableContent = L.copy()
             L[r], L[self.newRow] = L[self.newRow], L[r]
             self.newTableContent = L
@@ -78,6 +66,6 @@ class SwapRowsCommand(UndoCommand):
 class DeleteRowCommand(UndoCommand):
     def __init__(self, tableWidget, row):
         super().__init__(tableWidget)
-        self.oldTableContent = self.snapshot()
+        self.oldTableContent = tableWidget.snapshot()
         tableWidget.removeRow(row)
-        self.newTableContent = self.snapshot()
+        self.newTableContent = tableWidget.snapshot()
