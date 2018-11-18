@@ -73,3 +73,11 @@ class SwapRowsCommand(UndoCommand):
             L[r], L[self.newRow] = L[self.newRow], L[r]
             self.newTableContent = L
             self.hasSwappedCells = True
+
+
+class DeleteRowCommand(UndoCommand):
+    def __init__(self, tableWidget, row):
+        super().__init__(tableWidget)
+        self.oldTableContent = self.snapshot()
+        tableWidget.removeRow(row)
+        self.newTableContent = self.snapshot()

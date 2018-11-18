@@ -1,9 +1,10 @@
-from PyQt5.QtWidgets import QTableWidget, QHeaderView, QShortcut, \
+from PyQt5.QtWidgets import QTableWidget, QHeaderView, QShortcut,\
     QTableWidgetItem, QUndoStack
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtCore import QItemSelectionModel
 from delegate import StyledItemDelegate
-from commands import CopyCellCommand, SplitCellCommand, SwapRowsCommand
+from commands import CopyCellCommand, SplitCellCommand, \
+    SwapRowsCommand, DeleteRowCommand
 
 
 class TableWidget(QTableWidget):
@@ -38,6 +39,8 @@ class TableWidget(QTableWidget):
         shortcut = QShortcut(QKeySequence("Alt+Up"), self)
         shortcut.activated.connect(self.swapRowUp)
 
+        shortcut = QShortcut(QKeySequence("Ctrl+D"), self)
+        shortcut.activated.connect(self.deleteRow)
 
     def isNeighborCellEmpty(self):
         select = self.selectionModel()
@@ -106,3 +109,10 @@ class TableWidget(QTableWidget):
     def resizeEvent(self, event):
         self.resizeRowsToContents()
         super().resizeEvent(event)
+
+    def deleteRow(self):
+        if self.rowCount() > 1:
+            select = self.selectionModel()
+            row = select.currentIndex().row()
+            deleteRowCommand = DeleteRowCommand(self, row)
+            self.undoStack.push(deleteRowCommand)
