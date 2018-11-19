@@ -4,7 +4,8 @@ from PyQt5.QtGui import QKeySequence
 from PyQt5.QtCore import QItemSelectionModel
 from minker.delegate import StyledItemDelegate
 from minker.commands import CopyCellCommand, SplitCellCommand, \
-    SwapRowsCommand, DeleteRowCommand
+    SwapRowsCommand, DeleteRowCommand, InsertRowAboveCommand, \
+    InsertRowBelowCommand
 import json
 from minker.export_dialog import ExportDialog
 
@@ -52,6 +53,12 @@ class TableWidget(QTableWidget):
 
         shortcut = QShortcut(QKeySequence("Ctrl+E"), self)
         shortcut.activated.connect(self.export)
+
+        shortcut = QShortcut(QKeySequence("Ctrl+A"), self)
+        shortcut.activated.connect(self.insertRowAbove)
+
+        shortcut = QShortcut(QKeySequence("Ctrl+B"), self)
+        shortcut.activated.connect(self.insertRowBelow)
 
         self.setAlternatingRowColors(True)
         css='''alternate-background-color: floralwhite; 
@@ -177,3 +184,17 @@ class TableWidget(QTableWidget):
         d.setLeftText(self.getColumnText(0))
         d.setRightText(self.getColumnText(1))
         d.exec()
+
+    def selectCell(self, row, col):
+        self.clearSelection()
+        self.setCurrentCell(row, col, QItemSelectionModel.Select)
+
+    def insertRowAbove(self):
+        insertRowAboveCommand = InsertRowAboveCommand(self)
+        self.undoStack.push(insertRowAboveCommand)
+        self.selectCell(insertRowAboveCommand.newRow, insertRowAboveCommand.col)
+
+    def insertRowBelow(self):
+        insertRowBelowCommand = InsertRowBelowCommand(self)
+        self.undoStack.push(insertRowBelowCommand)
+        self.selectCell(insertRowBelowCommand.newRow, insertRowBelowCommand.col)

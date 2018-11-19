@@ -69,3 +69,27 @@ class DeleteRowCommand(UndoCommand):
         self.oldTableContent = tableWidget.snapshot()
         tableWidget.removeRow(row)
         self.newTableContent = tableWidget.snapshot()
+
+
+class InsertRowAboveCommand(UndoCommand):
+    def __init__(self, tableWidget):
+        super().__init__(tableWidget)
+        self.oldTableContent = tableWidget.snapshot()
+        select = tableWidget.selectionModel()
+        row = select.currentIndex().row()
+        self.col = select.currentIndex().column()
+        self.newRow = row
+        tableWidget.insertRow(row)
+        self.newTableContent = tableWidget.snapshot()
+
+
+class InsertRowBelowCommand(UndoCommand):
+    def __init__(self, tableWidget):
+        super().__init__(tableWidget)
+        self.oldTableContent = tableWidget.snapshot()
+        select = tableWidget.selectionModel()
+        row = select.currentIndex().row()
+        self.col = select.currentIndex().column()
+        self.newRow = row+1
+        tableWidget.insertRow(self.newRow)
+        self.newTableContent = tableWidget.snapshot()
