@@ -2,13 +2,15 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QIcon, QFont
 from minker.tablewidget import TableWidget
+from pathlib import Path
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Minker")
-        self.setWindowIcon(QIcon('list.png'))
+        iconfile = Path(__file__).parent / 'list.png'
+        self.setWindowIcon(QIcon(str(iconfile)))
 
         tw = TableWidget(self)
         self.setCentralWidget(tw)
