@@ -6,6 +6,7 @@ from minker.delegate import StyledItemDelegate
 from minker.commands import CopyCellCommand, SplitCellCommand, \
     SwapRowsCommand, DeleteRowCommand
 import json
+from minker.export_dialog import ExportDialog
 
 
 class TableWidget(QTableWidget):
@@ -48,6 +49,9 @@ class TableWidget(QTableWidget):
 
         shortcut = QShortcut(QKeySequence("Ctrl+O"), self)
         shortcut.activated.connect(self.open)
+
+        shortcut = QShortcut(QKeySequence("Ctrl+E"), self)
+        shortcut.activated.connect(self.export)
 
         self.setAlternatingRowColors(True)
         css='''alternate-background-color: floralwhite; 
@@ -161,3 +165,15 @@ class TableWidget(QTableWidget):
             with open(filename, 'r') as f:
                 self.populate(json.load(f))
 
+    def getColumnText(self, column):
+        str = ""
+        for r in range(self.rowCount()):
+            i = self.item(r, column)
+            str += "" if i is None else i.text() + "\n\n"
+        return str
+
+    def export(self):
+        d = ExportDialog()
+        d.setLeftText(self.getColumnText(0))
+        d.setRightText(self.getColumnText(1))
+        d.exec()
