@@ -15,6 +15,7 @@ class MainWindow(QMainWindow):
         tw = TableWidget(self)
         self.setCentralWidget(tw)
 
+
 def main():
     sCSS = '''
     QTableWidget {

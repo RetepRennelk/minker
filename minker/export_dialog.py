@@ -1,10 +1,16 @@
 from PyQt5.QtWidgets import QDialog, QHBoxLayout, QTextEdit
 from PyQt5.QtCore import Qt
+from pathlib import Path
+from PyQt5.QtGui import QIcon
+
 
 
 class ExportDialog(QDialog):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle("Minker")
+        iconfile = Path(__file__).parent / 'list.png'
+        self.setWindowIcon(QIcon(str(iconfile)))
 
         flags = self.windowFlags()
         flags &= ~Qt.WindowContextHelpButtonHint
