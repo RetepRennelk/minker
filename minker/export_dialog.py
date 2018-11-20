@@ -4,7 +4,6 @@ from pathlib import Path
 from PyQt5.QtGui import QIcon
 
 
-
 class ExportDialog(QDialog):
     def __init__(self):
         super().__init__()

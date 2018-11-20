@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QIcon, QFont
 from minker.tablewidget import TableWidget
 from pathlib import Path
+import minker.config as config
 
 
 class MainWindow(QMainWindow):
@@ -28,7 +29,7 @@ def main():
     '''
     app = QApplication(sys.argv)
     app.setStyleSheet(sCSS)
-    app.setFont(QFont("Ubuntu Mono", 16))
+    app.setFont(QFont("Ubuntu Mono", config.fontSize))
     m = MainWindow()
     m.setGeometry(200, 200, 600, 809)
     m.show()

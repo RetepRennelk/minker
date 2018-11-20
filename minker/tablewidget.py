@@ -8,6 +8,7 @@ from minker.commands import CopyCellCommand, SplitCellCommand, \
     InsertRowBelowCommand
 import json
 from minker.export_dialog import ExportDialog
+import minker.config as config
 
 
 class TableWidget(QTableWidget):
@@ -213,7 +214,7 @@ class TableWidget(QTableWidget):
 
     def fontsize(self, delta):
         font = self.font()
-        sz = font.pointSize()
-        font.setPointSize(sz+delta)
+        config.fontSize += delta
+        font.setPointSize(config.fontSize)
         self.setFont(font)
         self.resizeOnCellChange()

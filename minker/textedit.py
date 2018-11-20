@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QTextEdit, QSizeGrip, QVBoxLayout, \
     QShortcut, QApplication
 from PyQt5.QtCore import Qt, QItemSelectionModel
 from PyQt5.QtGui import QKeySequence, QTextCursor
+import minker.config as config
 
 
 class TextEdit(QTextEdit):
@@ -14,6 +15,10 @@ class TextEdit(QTextEdit):
 
         shortcut = QShortcut(QKeySequence("Ctrl+Down"), self)
         shortcut.activated.connect(self.splitCell)
+
+        font = self.font()
+        font.setPointSize(config.fontSize)
+        self.setFont(font)
 
     def splitCell(self):
         self.moveCursor(QTextCursor.End, QTextCursor.KeepAnchor)
