@@ -60,6 +60,12 @@ class TableWidget(QTableWidget):
         shortcut = QShortcut(QKeySequence("Ctrl+B"), self)
         shortcut.activated.connect(self.insertRowBelow)
 
+        shortcut = QShortcut(QKeySequence("Ctrl++"), self)
+        shortcut.activated.connect(self.increaseFontSize)
+
+        shortcut = QShortcut(QKeySequence("Ctrl+-"), self)
+        shortcut.activated.connect(self.decreaseFontSize)
+
         self.setAlternatingRowColors(True)
         css='''alternate-background-color: floralwhite; 
         background-color: white;
@@ -128,7 +134,7 @@ class TableWidget(QTableWidget):
             c = swapRowsCommand.newColumn
             self.setCurrentCell(r, c, QItemSelectionModel.Select)
 
-    def resizeOnCellChange(self, row, column):
+    def resizeOnCellChange(self, row=0, column=0):
         self.resizeRowsToContents()
 
     def resizeEvent(self, event):
@@ -141,7 +147,7 @@ class TableWidget(QTableWidget):
             row = select.currentIndex().row()
             deleteRowCommand = DeleteRowCommand(self, row)
             self.undoStack.push(deleteRowCommand)
-            
+
     def snapshot(self):
         L = []
         for r in range(self.rowCount()):
@@ -198,3 +204,16 @@ class TableWidget(QTableWidget):
         insertRowBelowCommand = InsertRowBelowCommand(self)
         self.undoStack.push(insertRowBelowCommand)
         self.selectCell(insertRowBelowCommand.newRow, insertRowBelowCommand.col)
+
+    def increaseFontSize(self):
+        self.fontsize(+1)
+
+    def decreaseFontSize(self):
+        self.fontsize(-1)
+
+    def fontsize(self, delta):
+        font = self.font()
+        sz = font.pointSize()
+        font.setPointSize(sz+delta)
+        self.setFont(font)
+        self.resizeOnCellChange()
