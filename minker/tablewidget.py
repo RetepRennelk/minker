@@ -20,7 +20,7 @@ class TableWidget(QTableWidget):
         self.setColumnCount(2)
         self.setRowCount(1)
 
-        self.cellChanged.connect(self.resize)
+        self.cellChanged.connect(self.resizeOnCellChange)
 
         labels = ["Original", "Transmogrified"]
         self.setHorizontalHeaderLabels(labels)
@@ -128,12 +128,12 @@ class TableWidget(QTableWidget):
             c = swapRowsCommand.newColumn
             self.setCurrentCell(r, c, QItemSelectionModel.Select)
 
-    def resize(self, row, column):
+    def resizeOnCellChange(self, row, column):
         self.resizeRowsToContents()
 
     def resizeEvent(self, event):
-        self.resizeRowsToContents()
         super().resizeEvent(event)
+        self.resizeRowsToContents()
 
     def deleteRow(self):
         if self.rowCount() > 1:
