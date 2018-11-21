@@ -93,3 +93,14 @@ class InsertRowBelowCommand(UndoCommand):
         self.newRow = row+1
         tableWidget.insertRow(self.newRow)
         self.newTableContent = tableWidget.snapshot()
+
+
+class ChangeCellCommand(UndoCommand):
+    def __init__(self, tableWidget):
+        super().__init__(tableWidget)
+        self.tableWidget = tableWidget
+        self.oldTableContent = tableWidget.snapshot()
+
+    def commit(self):
+        tw = self.tableWidget
+        self.newTableContent = tw.snapshot()

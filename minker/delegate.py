@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QStyledItemDelegate
 from PyQt5.QtCore import Qt, QEvent
 from minker.textedit import TextEdit
+from minker.commands import ChangeCellCommand
 
 
 class StyledItemDelegate(QStyledItemDelegate):
@@ -9,7 +10,7 @@ class StyledItemDelegate(QStyledItemDelegate):
         self.installEventFilter(self)
 
     def createEditor(self, parent, option, index):
-        print(option.rect)
+        self.changeCellCommand = ChangeCellCommand(self.parent())
         self.t = TextEdit(parent)
         return self.t
 
@@ -31,8 +32,15 @@ class StyledItemDelegate(QStyledItemDelegate):
             if sw1 and sw2:
                 self.commit_and_close_editor()
                 return False
+        elif event.type() == QEvent.FocusOut:
+            self.commit_and_close_editor()
+            return False
         return super().eventFilter(editor, event)
 
     def commit_and_close_editor(self):
+        print(type(self.parent()))
         self.commitData.emit(self.t)
         self.closeEditor.emit(self.t)
+
+        self.changeCellCommand.commit()
+        self.parent().undoStack.push(self.changeCellCommand)
