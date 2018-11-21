@@ -10,11 +10,13 @@ class StyledItemDelegate(QStyledItemDelegate):
         self.installEventFilter(self)
 
     def createEditor(self, parent, option, index):
+        self.currentRow, self.currentColumn = index.row(), index.column()
         self.changeCellCommand = ChangeCellCommand(self.parent())
         self.t = TextEdit(parent)
         return self.t
 
     def setEditorData(self, editor, index):
+        print(index.row())
         value = index.model().data(index, Qt.EditRole)
         editor.setPlainText(value)
 
@@ -31,6 +33,8 @@ class StyledItemDelegate(QStyledItemDelegate):
             sw2 = event.key() == Qt.Key_Return
             if sw1 and sw2:
                 self.commit_and_close_editor()
+                tw = self.parent()
+                tw.selectCell(self.currentRow, self.currentColumn)
                 return False
         elif event.type() == QEvent.FocusOut:
             self.commit_and_close_editor()

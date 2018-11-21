@@ -130,10 +130,13 @@ class TableWidget(QTableWidget):
         if swapRowsCommand.hasSwappedCells:
             self.undoStack.push(swapRowsCommand)
 
-            self.clearSelection()
             r = swapRowsCommand.newRow
             c = swapRowsCommand.newColumn
-            self.setCurrentCell(r, c, QItemSelectionModel.Select)
+            self.selectCell(r, c)
+
+    def selectCell(self, r, c):
+        self.clearSelection()
+        self.setCurrentCell(r, c, QItemSelectionModel.Select)
 
     def resizeOnCellChange(self, row=0, column=0):
         self.resizeRowsToContents()
