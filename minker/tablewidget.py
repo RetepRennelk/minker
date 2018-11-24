@@ -107,9 +107,7 @@ class TableWidget(QTableWidget):
         copyCellCommand = CopyCellCommand(self)
         if copyCellCommand.hasCopiedCell:
             self.undoStack.push(copyCellCommand)
-
-        self.clearSelection()
-        self.setCurrentCell(row, 1, QItemSelectionModel.Select)
+            self.selectCell(row, 1)
 
     def populate(self, L):
         self.clearContents()
