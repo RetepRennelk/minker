@@ -68,11 +68,12 @@ class TableWidget(QTableWidget):
         shortcut.activated.connect(self.decreaseFontSize)
 
         self.setAlternatingRowColors(True)
-        css='''alternate-background-color: floralwhite; 
+        css = '''alternate-background-color: floralwhite;
         background-color: white;
         '''
         self.setStyleSheet(css)
-        
+
+        self.fileName = ""
 
     def isNeighborCellEmpty(self):
         select = self.selectionModel()
@@ -134,12 +135,13 @@ class TableWidget(QTableWidget):
             c = swapRowsCommand.newColumn
             self.selectCell(r, c)
 
-    def selectCell(self, r, c):
+    def selectCell(self, row, col):
         self.clearSelection()
-        self.setCurrentCell(r, c, QItemSelectionModel.Select)
+        self.setCurrentCell(row, col, QItemSelectionModel.Select)
 
     def resizeOnCellChange(self, row=0, column=0):
         self.resizeRowsToContents()
+        self.parent().setModifiedWindowTitle(self.fileName)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -165,22 +167,27 @@ class TableWidget(QTableWidget):
     def save(self):
         fd = QFileDialog()
         fd.setNameFilter("Minker files (*.mkon)")
-        if (fd.exec()):
-            filename = fd.selectedFiles()[0]
-            if not filename.endswith(".mkon"):
-                filename += ".mkon"
-            with open(filename, 'w') as f:
-                json.dump(self.snapshot(), f)
+        if self.fileName == "":
+            if (fd.exec()):
+                fileName = fd.selectedFiles()[0]
+                if not fileName.endswith(".mkon"):
+                    fileName += ".mkon"
+                self.fileName = fileName
+        with open(self.fileName, 'w') as f:
+            json.dump(self.snapshot(), f)
+        self.parent().setExtendedWindowTitle(self.fileName)
 
     def open(self):
         fd = QFileDialog()
         fd.setNameFilter("Minker files (*.mkon)")
         if (fd.exec()):
-            filename = fd.selectedFiles()[0]
-            if not filename.endswith(".mkon"):
-                filename += ".mkon"
-            with open(filename, 'r') as f:
+            fileName = fd.selectedFiles()[0]
+            if not fileName.endswith(".mkon"):
+                fileName += ".mkon"
+            with open(fileName, 'r') as f:
                 self.populate(json.load(f))
+            self.fileName = fileName
+            self.parent().setExtendedWindowTitle(fileName)
 
     def getColumnText(self, column):
         str = ""
@@ -194,10 +201,6 @@ class TableWidget(QTableWidget):
         d.setLeftText(self.getColumnText(0))
         d.setRightText(self.getColumnText(1))
         d.exec()
-
-    def selectCell(self, row, col):
-        self.clearSelection()
-        self.setCurrentCell(row, col, QItemSelectionModel.Select)
 
     def insertRowAbove(self):
         insertRowAboveCommand = InsertRowAboveCommand(self)

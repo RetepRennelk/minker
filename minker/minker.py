@@ -9,12 +9,23 @@ import minker.config as config
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Minker")
         iconfile = Path(__file__).parent / 'list.png'
         self.setWindowIcon(QIcon(str(iconfile)))
+        self.setWindowTitle()
 
         tw = TableWidget(self)
         self.setCentralWidget(tw)
+
+    def setWindowTitle(self):
+        super().setWindowTitle(config.windowTitle)
+
+    def setExtendedWindowTitle(self, fileName):
+        super().setWindowTitle(config.windowTitle + ": " + fileName)
+
+    def setModifiedWindowTitle(self, fileName):
+        if fileName != "":
+            s = config.windowTitle + ": " + fileName + " (*)"
+            super().setWindowTitle(s)
 
 
 def main():
