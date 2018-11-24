@@ -150,9 +150,15 @@ class TableWidget(QTableWidget):
     def deleteRow(self):
         if self.rowCount() > 1:
             select = self.selectionModel()
-            row = select.currentIndex().row()
+            idx = select.currentIndex()
+            row, column = idx.row(), idx.column()
             deleteRowCommand = DeleteRowCommand(self, row)
             self.undoStack.push(deleteRowCommand)
+            if row < self.rowCount():
+                self.selectCell(row, column)
+            else:
+                self.selectCell(self.rowCount()-1, column)
+            
 
     def snapshot(self):
         L = []
