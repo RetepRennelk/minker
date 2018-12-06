@@ -16,7 +16,6 @@ class StyledItemDelegate(QStyledItemDelegate):
         return self.t
 
     def setEditorData(self, editor, index):
-        print(index.row())
         value = index.model().data(index, Qt.EditRole)
         editor.setPlainText(value)
 
@@ -42,7 +41,6 @@ class StyledItemDelegate(QStyledItemDelegate):
         return super().eventFilter(editor, event)
 
     def commit_and_close_editor(self):
-        print(type(self.parent()))
         self.commitData.emit(self.t)
         self.closeEditor.emit(self.t)
 

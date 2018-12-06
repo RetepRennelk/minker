@@ -20,6 +20,8 @@ class TextEdit(QTextEdit):
         font.setPointSize(config.fontSize)
         self.setFont(font)
 
+        self.document().contentsChanged.connect(self.sizeChange)
+
     def splitCell(self):
         self.moveCursor(QTextCursor.End, QTextCursor.KeepAnchor)
         self.cut()
@@ -29,3 +31,8 @@ class TextEdit(QTextEdit):
 
         tableWidget.clearSelection()
         tableWidget.setCurrentCell(newRow, 0, QItemSelectionModel.Select)
+
+    def sizeChange(self):
+        h = self.document().size().height()
+        if h < self.parent().geometry().height():
+            self.setMinimumHeight(h)
