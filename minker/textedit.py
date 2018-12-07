@@ -24,10 +24,14 @@ class TextEdit(QTextEdit):
 
     def splitCell(self):
         self.moveCursor(QTextCursor.End, QTextCursor.KeepAnchor)
-        self.cut()
-        clipboard = QApplication.clipboard()
+        tc = self.textCursor()
+        txt = tc.selectedText()
+
+        self.moveCursor(QTextCursor.End, QTextCursor.KeepAnchor)
+        tc.removeSelectedText()
+
         tableWidget = self.parent().parent()
-        newRow = tableWidget.splitCellCmd(clipboard.text())
+        newRow = tableWidget.splitCellCmd(txt)
 
         tableWidget.clearSelection()
         tableWidget.setCurrentCell(newRow, 0, QItemSelectionModel.Select)
