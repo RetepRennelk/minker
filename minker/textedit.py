@@ -23,11 +23,9 @@ class TextEdit(QTextEdit):
         self.document().contentsChanged.connect(self.sizeChange)
 
     def splitCell(self):
-        self.moveCursor(QTextCursor.End, QTextCursor.KeepAnchor)
         tc = self.textCursor()
+        tc.movePosition(QTextCursor.End, QTextCursor.KeepAnchor)
         txt = tc.selectedText()
-
-        self.moveCursor(QTextCursor.End, QTextCursor.KeepAnchor)
         tc.removeSelectedText()
 
         tableWidget = self.parent().parent()
